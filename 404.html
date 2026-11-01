@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página não encontrada — E-books Studio</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#07070b">
+<link rel="icon" href="assets/img/logo-icon.png" type="image/png">
+<link rel="stylesheet" href="assets/css/base.css">
+<style>
+  .notfound {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 40px 24px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.28), transparent 60%),
+      var(--ink-950);
+  }
+  .notfound__inner { max-width: 520px; }
+  .notfound__logo { height: 64px; width: auto; margin: 0 auto 36px; }
+  .notfound__code {
+    font-family: var(--font-display);
+    font-size: clamp(64px, 14vw, 110px);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    background: linear-gradient(120deg, #b58bff, #7c3aed 60%, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+  }
+  .notfound h1 { font-size: clamp(24px, 4vw, 32px); margin-bottom: 14px; }
+  .notfound p { color: var(--text-soft); font-size: 15px; line-height: 1.65; margin-bottom: 30px; }
+  .notfound__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .notfound__foot { margin-top: 40px; font-size: 12.5px; color: var(--text-dim); }
+  .notfound__foot a { color: var(--purple-300); }
+</style>
+</head>
+<body>
+<main class="notfound">
+  <div class="notfound__inner">
+    <img class="notfound__logo" src="assets/img/logo.png" alt="E-books Studio">
+    <p class="notfound__code">404</p>
+    <h1>Essa página saiu da edição</h1>
+    <p>O endereço que você tentou abrir não existe ou foi movido. Volte ao início ou siga direto para o estúdio de criação.</p>
+    <div class="notfound__actions">
+      <a class="btn btn--primary" href="/index.html">Voltar ao início</a>
+      <a class="btn btn--ghost" href="/estudio.html">Abrir o estúdio</a>
+    </div>
+    <p class="notfound__foot">Precisa de ajuda? <a href="mailto:contato@ebooksstudio.com.br">contato@ebooksstudio.com.br</a></p>
+  </div>
+</main>
+</body>
+</html>
