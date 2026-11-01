@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# E-books Studio — site institucional e estúdio de criação
