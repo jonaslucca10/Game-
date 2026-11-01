@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estúdio de criação — E-books Studio</title>
+<meta name="description" content="Crie, edite e exporte seu e-book profissional: escreva manualmente, gere com IA ou combine os dois modos.">
+<meta name="theme-color" content="#07070b">
+<link rel="icon" href="assets/img/logo-icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/estudio.css">
+</head>
+<body class="studio-body">
+
+<!-- ============================ TOPBAR ============================ -->
+<header class="studio-bar no-print">
+  <a class="brand studio-bar__brand" href="index.html" title="Voltar ao site">
+    <img src="assets/img/logo.png" alt="E-books Studio">
+  </a>
+  <span class="studio-bar__divider" aria-hidden="true"></span>
+  <div class="studio-bar__project">
+    <label class="sr-only" for="project-name">Nome do projeto</label>
+    <input id="project-name" type="text" value="Meu novo e-book" maxlength="70" spellcheck="false">
+    <span class="studio-bar__status" id="save-status"><i></i><span>Salvo</span></span>
+  </div>
+  <div class="studio-bar__actions">
+    <button class="icon-btn" type="button" data-open="modal-projects" title="Meus projetos" aria-label="Meus projetos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2.5h7A1.5 1.5 0 0 1 19 10v7.5A1.5 1.5 0 0 1 17.5 19h-13A1.5 1.5 0 0 1 3 17.5z"/></svg>
+    </button>
+    <button class="btn btn--ghost" type="button" data-open="modal-templates">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>
+      <span>Modelos</span>
+    </button>
+    <button class="btn btn--primary" type="button" data-open="modal-export" id="btn-export">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 20h16"/></svg>
+      <span>Exportar</span>
+    </button>
+  </div>
+</header>
+
+<div class="scrim no-print" id="scrim" hidden></div>
+
+<div class="studio">
+
+  <!-- =========================== SIDEBAR =========================== -->
+  <aside class="sidebar no-print" id="sidebar" aria-label="Páginas do e-book">
+    <div class="sidebar__head">
+      <span class="sidebar__title">Páginas</span>
+      <span class="sidebar__count" id="page-count">0</span>
+    </div>
+    <div class="page-list" id="page-list"><!-- JS --></div>
+    <div class="sidebar__foot">
+      <button class="add-page" type="button" id="add-chapter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Adicionar capítulo
+      </button>
+      <button class="add-page" type="button" id="add-toc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M4 12h10M4 18h6"/><path d="M17 6h3M17 12h3M17 18h3"/></svg>
+        Inserir sumário
+      </button>
+      <p class="sidebar__meta">Tudo é salvo automaticamente no seu navegador.</p>
+    </div>
+  </aside>
+
+  <!-- =========================== CANVAS ============================ -->
+  <main class="canvas" id="canvas">
+    <div class="canvas__toolbar no-print">
+      <span class="canvas__hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4.5-1 10-10a2.5 2.5 0 0 0-3.5-3.5l-10 10z"/></svg>
+        Clique em qualquer texto para editar
+      </span>
+      <div class="canvas__tools">
+        <button class="chip-select" type="button" id="focus-page" title="Ir para a página selecionada">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 0 4 21z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5A1.5 1.5 0 0 1 20 21z"/></svg>
+          <span id="focus-label">Página 1</span>
+        </button>
+        <div class="canvas__zoom" role="group" aria-label="Zoom">
+          <button type="button" data-zoom="-1" aria-label="Diminuir zoom">−</button>
+          <span id="zoom-label">100%</span>
+          <button type="button" data-zoom="1" aria-label="Aumentar zoom">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="pages" id="pages"><!-- JS --></div>
+  </main>
+
+  <!-- ========================== INSPECTOR ========================== -->
+  <aside class="inspector no-print" id="inspector" aria-label="Propriedades">
+    <div class="inspector__tabs" role="tablist">
+      <button class="inspector__tab is-active" type="button" role="tab" data-tab="design" id="tab-design" aria-selected="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.5-1.4-1.7-1.4-3 0-1 .8-1.7 1.9-1.7H16a5 5 0 0 0 5-5c0-3.6-4-6.5-9-6.5z"/><circle cx="7.5" cy="11.5" r="1"/><circle cx="12" cy="8" r="1"/><circle cx="16.5" cy="10.5" r="1"/></svg>
+        Design
+      </button>
+      <button class="inspector__tab" type="button" role="tab" data-tab="content" id="tab-content" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h9"/></svg>
+        Conteúdo
+      </button>
+      <button class="inspector__tab" type="button" role="tab" data-tab="ai" id="tab-ai" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/></svg>
+        IA
+      </button>
+    </div>
+
+    <div class="inspector__panels">
+      <!-- ------------------------- DESIGN ------------------------- -->
+      <section class="panel is-active" data-panel="design" role="tabpanel" aria-labelledby="tab-design">
+        <div class="panel__group">
+          <p class="panel__label">Tema do e-book</p>
+          <div class="swatches" id="theme-swatches"><!-- JS --></div>
+        </div>
+
+        <div class="panel__group">
+          <p class="panel__label">Cor de destaque</p>
+          <div class="accent-row" id="accent-row"><!-- JS --></div>
+        </div>
+
+        <div class="panel__group">
+          <p class="panel__label">Tipografia</p>
+          <div class="segmented" id="font-seg">
+            <button type="button" data-font="sans" class="is-active">Moderna</button>
+            <button type="button" data-font="serif">Clássica</button>
+            <button type="button" data-font="display">Display</button>
+          </div>
+        </div>
+
+        <div class="panel__group">
+          <p class="panel__label">Layout das páginas</p>
+          <div class="segmented" id="layout-seg">
+            <button type="button" data-layout="classico" class="is-active">Clássico</button>
+            <button type="button" data-layout="moderno">Moderno</button>
+            <button type="button" data-layout="revista">Revista</button>
+          </div>
+        </div>
+
+        <div class="panel__group">
+          <p class="panel__label">Formato</p>
+          <div class="segmented" id="size-seg">
+            <button type="button" data-size="a4" class="is-active">A4</button>
+            <button type="button" data-size="a5">A5</button>
+            <button type="button" data-size="quadrado">Quadrado</button>
+          </div>
+          <p class="panel__hint" id="size-hint">A4 · 210 × 297 mm — ideal para leitura em tela e impressão.</p>
+        </div>
+
+        <div class="panel__group">
+          <p class="panel__label">Arte da capa</p>
+          <div class="art-options" id="art-options"><!-- JS --></div>
+          <p class="panel__hint">A arte é aplicada somente na capa. O texto continua editável.</p>
+        </div>
+      </section>
+
+      <!-- ------------------------ CONTEÚDO ------------------------ -->
+      <section class="panel" data-panel="content" role="tabpanel" aria-labelledby="tab-content">
+        <div class="panel__group">
+          <p class="panel__label">Dados do e-book</p>
+          <div class="field">
+            <label for="f-title">Título</label>
+            <input class="input" id="f-title" type="text" maxlength="90">
+          </div>
+          <div class="field">
+            <label for="f-subtitle">Subtítulo / chamada</label>
+            <input class="input" id="f-subtitle" type="text" maxlength="120">
+          </div>
+          <div class="field">
+            <label for="f-author">Autor(a)</label>
+            <input class="input" id="f-author" type="text" maxlength="60">
+          </div>
+        </div>
+
+        <div class="panel__group">
+          <p class="panel__label">Página selecionada <span id="sel-page-label" style="text-transform:none;letter-spacing:0;color:#77718d">—</span></p>
+          <div class="field">
+            <label for="f-page-title">Título da página</label>
+            <input class="input" id="f-page-title" type="text" maxlength="110">
+          </div>
+        </div>
+
+        <div class="panel__group" id="blocks-group">
+          <p class="panel__label">Adicionar bloco</p>
+          <div class="modal-grid" style="grid-template-columns:1fr 1fr">
+            <button class="modal-card" type="button" data-add-block="p">
+              <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
+              <span><strong>Parágrafo</strong><span>Texto corrido</span></span>
+            </button>
+            <button class="modal-card" type="button" data-add-block="h3">
+              <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 5v14M18 5v14M6 12h12"/></svg></span>
+              <span><strong>Subtítulo</strong><span>Quebra visual</span></span>
+            </button>
+            <button class="modal-card" type="button" data-add-block="list">
+              <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/></svg></span>
+              <span><strong>Lista</strong><span>Itens com marcador</span></span>
+            </button>
+            <button class="modal-card" type="button" data-add-block="quote">
+              <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7H5v6h4zm10 0h-4v6h4z"/><path d="M9 13c0 3-1.5 4.5-4 4.5M19 13c0 3-1.5 4.5-4 4.5"/></svg></span>
+              <span><strong>Citação</strong><span>Destaque de frase</span></span>
+            </button>
+            <button class="modal-card" type="button" data-add-block="callout">
+              <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 5.2L20 9l-4 4 1 6-5-2.8L7 19l1-6-4-4 5.8-.8z"/></svg></span>
+              <span><strong>Destaque</strong><span>Dica em caixa</span></span>
+            </button>
+            <button class="modal-card" type="button" id="delete-page">
+              <span class="modal-card__icon" style="background:rgba(248,113,113,.14);color:#fca5a5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></span>
+              <span><strong>Excluir página</strong><span>Não pode ser desfeito</span></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel__group">
+          <p class="panel__label">Dica de edição</p>
+          <p class="panel__hint">Clique diretamente em qualquer texto da página para editar. Use <strong>Enter</strong> para criar novos parágrafos e mantenha o texto curto: um capítulo por página fica mais elegante.</p>
+        </div>
+      </section>
+
+      <!-- --------------------------- IA --------------------------- -->
+      <section class="panel" data-panel="ai" role="tabpanel" aria-labelledby="tab-ai">
+        <div class="panel__group">
+          <p class="panel__label">Modo de criação</p>
+          <div class="segmented" id="mode-seg">
+            <button type="button" data-mode="manual">Manual</button>
+            <button type="button" data-mode="ia">Com IA</button>
+            <button type="button" data-mode="hibrido" class="is-active">Híbrido</button>
+          </div>
+          <p class="panel__hint" id="mode-hint">No modo híbrido você pode gerar uma base e reescrever como quiser.</p>
+        </div>
+
+        <div class="panel__group">
+          <span class="ai-mode-badge"><i></i> <span id="ai-source">Assistente local · sem chave</span></span>
+          <div class="field">
+            <label for="ai-topic">Tema do e-book</label>
+            <textarea class="textarea" id="ai-topic" placeholder="Ex.: Como organizar as finanças de um negócio pequeno" maxlength="220"></textarea>
+          </div>
+          <div class="field">
+            <label for="ai-audience">Público</label>
+            <input class="input" id="ai-audience" type="text" placeholder="Ex.: donos de pequenos negócios" maxlength="120">
+          </div>
+          <div class="field">
+            <label for="ai-tone">Tom de voz</label>
+            <select class="select" id="ai-tone">
+              <option value="pratico">Prático e direto</option>
+              <option value="didatico">Didático e acolhedor</option>
+              <option value="profissional">Profissional e sóbrio</option>
+              <option value="inspirador">Inspirador</option>
+              <option value="provocativo">Provocativo / sem rodeios</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ai-chapters">Quantidade de capítulos</label>
+            <select class="select" id="ai-chapters">
+              <option value="3">3 capítulos</option>
+              <option value="4">4 capítulos</option>
+              <option value="5" selected>5 capítulos</option>
+              <option value="6">6 capítulos</option>
+              <option value="7">7 capítulos</option>
+              <option value="8">8 capítulos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ai-actions">
+          <button class="btn btn--primary btn--block" type="button" id="ai-generate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z"/></svg>
+            Gerar e-book completo
+          </button>
+          <button class="btn btn--ghost btn--block" type="button" id="ai-outline">Gerar só o sumário</button>
+          <button class="btn btn--ghost btn--block" type="button" id="ai-page">Reescrever página atual</button>
+        </div>
+
+        <div class="ai-progress" aria-hidden="true"><span id="ai-progress-bar"></span></div>
+        <div class="ai-log" id="ai-log" aria-live="polite">Descreva o tema e clique em <strong>Gerar e-book completo</strong>. Você poderá revisar e editar tudo depois.</div>
+
+        <details class="details-box">
+          <summary>Conectar uma IA em nuvem (opcional)</summary>
+          <div class="details-box__body">
+            <div class="field">
+              <label for="ai-key">Chave da API</label>
+              <input class="input" id="ai-key" type="password" placeholder="sk-..." autocomplete="new-password">
+            </div>
+            <div class="field">
+              <label for="ai-model">Modelo</label>
+              <input class="input" id="ai-model" type="text" value="gpt-4o-mini" maxlength="60">
+            </div>
+            <p class="panel__hint">Opcional. A chave fica salva apenas neste navegador e é enviada direto para a OpenAI, sem passar por servidores da E-books Studio. Sem chave, o estúdio usa o assistente local, que monta a estrutura e o texto a partir do seu briefing.</p>
+          </div>
+        </details>
+      </section>
+    </div>
+  </aside>
+</div>
+
+<!-- ========================= MOBILE TOOLS ========================= -->
+<div class="mobile-tools no-print">
+  <button type="button" data-drawer="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    Páginas
+  </button>
+  <button type="button" data-drawer="inspector">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.5-1.4-1.7-1.4-3 0-1 .8-1.7 1.9-1.7H16a5 5 0 0 0 5-5c0-3.6-4-6.5-9-6.5z"/></svg>
+    Design
+  </button>
+</div>
+
+<!-- ========================== MODAIS ============================ -->
+<dialog class="simple-modal" id="modal-templates">
+  <div class="simple-modal__inner">
+    <button class="simple-modal__close" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <h2>Começar com um modelo</h2>
+    <p class="simple-modal__sub">Estruturas prontas — substituímos o conteúdo do seu projeto atual.</p>
+    <div class="modal-grid" id="template-list"><!-- JS --></div>
+  </div>
+</dialog>
+
+<dialog class="simple-modal" id="modal-projects">
+  <div class="simple-modal__inner">
+    <button class="simple-modal__close" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <h2>Meus projetos</h2>
+    <p class="simple-modal__sub">Salvos automaticamente neste navegador.</p>
+    <div id="project-list"><!-- JS --></div>
+    <button class="btn btn--primary btn--block" type="button" id="new-project" style="margin-top:14px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Criar novo projeto
+    </button>
+  </div>
+</dialog>
+
+<dialog class="simple-modal" id="modal-export">
+  <div class="simple-modal__inner">
+    <button class="simple-modal__close" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <h2>Exportar e-book</h2>
+    <p class="simple-modal__sub">Escolha o formato de saída do seu projeto.</p>
+    <div class="modal-grid">
+      <button class="modal-card" type="button" data-export="pdf">
+        <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 14h6M9 17h4"/></svg></span>
+        <span><strong>PDF</strong><span>Abrir impressão / salvar PDF</span></span>
+      </button>
+      <button class="modal-card" type="button" data-export="html">
+        <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4M16 8l5 4-5 4M14 4l-4 16"/></svg></span>
+        <span><strong>HTML</strong><span>Arquivo único para web</span></span>
+      </button>
+      <button class="modal-card" type="button" data-export="json">
+        <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8l4 4v12H4V4z"/><path d="M8 12h8M8 16h5"/></svg></span>
+        <span><strong>Projeto</strong><span>Backup em .json</span></span>
+      </button>
+      <button class="modal-card" type="button" data-export="copy">
+        <span class="modal-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></span>
+        <span><strong>Texto</strong><span>Copiar conteúdo</span></span>
+      </button>
+    </div>
+    <p class="panel__hint" style="margin-top:16px">Para o PDF: escolha <strong>Salvar como PDF</strong> na janela de impressão, com margens “Nenhuma” e “Gráficos de fundo” ativado.</p>
+  </div>
+</dialog>
+
+<div class="toast no-print" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>
+  <span id="toast-text">Salvo</span>
+</div>
+
+<script src="assets/js/ai.js"></script>
+<script src="assets/js/estudio.js"></script>
+</body>
+</html>
