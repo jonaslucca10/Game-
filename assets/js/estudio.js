@@ -627,6 +627,15 @@
         h('span', {}, h('strong', { text: tpl.name }), h('span', { text: tpl.desc }))
       );
       card.addEventListener('click', () => {
+        if (!pode('modelos') && PREMIUM.modelos.indexOf(tpl.id) >= 0) {
+          closeModals();
+          upsell('modelos');
+          return;
+        }
+        if (!projetosIlimitados() && projetosExtras().length > 0) {
+          if (!window.confirm('No plano Essencial você mantém 1 projeto ativo. Aplicar este modelo substitui os outros projetos salvos. Continuar?')) return;
+          writeProjects([]);
+        }
         closeModals();
         setProject(projectFromTemplate(tpl));
         toast('Modelo aplicado: ' + tpl.name);
@@ -773,6 +782,7 @@
 
   async function generate(kind) {
     if (state.busy) return;
+    if (!pode('ia')) { upsell('ia'); return; }
     const opts = aiOptions();
     if (!opts.topic) {
       aiLog('Descreva o tema do e-book para começar.');
@@ -989,6 +999,7 @@
   async function exportFile(kind) {
     if (kind === 'pdf') { exportPDF(); return; }
     if (kind === 'html') {
+      if (!pode('html')) { closeModals(); upsell('html'); return; }
       toast('Preparando arquivo…');
       const html = await buildStandaloneHTML();
       download(slug(state.project.title) + '.html', html, 'text/html;charset=utf-8');
@@ -1065,6 +1076,190 @@
     });
   }
 
+  /* ---------------------------------------------------------------- planos */
+  // O que é exclusivo dos planos pagos.
+  const PREMIUM = {
+    temas: ['editorial', 'meianoite', 'solar'],
+    capas: ['orb', 'neon'],
+    modelos: ['metodo']
+  };
+
+  const MOTIVOS = {
+    ia: 'A criação com IA faz parte do plano Profissional: ela monta o sumário e escreve o rascunho dos capítulos a partir do seu briefing.',
+    modelos: 'Este modelo é premium — ele faz parte dos modelos liberados no plano Profissional.',
+    temas: 'Este tema é premium. No plano Profissional você usa todos os temas, fontes e capas.',
+    capas: 'Esta capa é premium. No plano Profissional você usa todas as capas e combina com qualquer tema.',
+    html: 'Exportar em HTML e gerar PDF sem marca d’água fazem parte do plano Profissional.',
+    projetos: 'O plano Essencial permite 1 projeto ativo por vez. No Profissional você cria quantos quiser.',
+    codigo: 'Cole abaixo o código que você recebeu por e-mail depois da compra. Hífens e espaços são ignorados.',
+    padrao: 'Compare o que está liberado no seu acesso atual.'
+  };
+
+  const Lic = () => window.EbooksLicenca || null;
+
+  function planoLimites() {
+    const api = Lic();
+    return api ? api.limites() : { nome: 'Essencial', projetos: 1, ia: false, exportHTML: false, temasPremium: false, capasPremium: false, modelosPremium: false };
+  }
+
+  function pode(recurso) {
+    const api = Lic();
+    return api ? api.pode(recurso) : false;
+  }
+
+  function dataBR(iso) {
+    return new Date(String(iso) + 'T12:00:00').toLocaleDateString('pt-BR');
+  }
+
+  function limiteProjetos() {
+    const lim = planoLimites();
+    return isFinite(lim.projetos) ? lim.projetos : Infinity;
+  }
+
+  function projetosIlimitados() {
+    return !isFinite(limiteProjetos());
+  }
+
+  // Já existe mais de um projeto salvo além do atual?
+  function projetosExtras() {
+    return readProjects().filter((p) => !state.project || p.id !== state.project.id);
+  }
+
+  function podeCriarProjetoAgora() {
+    if (projetosIlimitados()) return true;
+    return projetosExtras().length === 0;
+  }
+
+  function upsell(motivo) {
+    const alvo = $('#plano-motivo');
+    if (alvo) alvo.textContent = MOTIVOS[motivo] || MOTIVOS.padrao;
+    openModal('modal-plano');
+    if (motivo === 'codigo') {
+      setTimeout(() => { const campo = $('#licenca-codigo'); if (campo) campo.focus(); }, 140);
+    }
+  }
+
+  function renderPlanoAtual() {
+    const host = $('#plano-atual');
+    if (!host) return;
+    const api = Lic();
+    const ativa = api ? api.getAtiva() : null;
+    const lim = planoLimites();
+    host.innerHTML = '';
+    host.append(h('span', { class: 'plano-atual__badge', text: lim.nome || 'Essencial' }));
+
+    if (ativa) {
+      const texto = h('span', { class: 'plano-atual__texto' });
+      texto.innerHTML = 'Plano ativo' +
+        (ativa.expira ? ' até <strong>' + dataBR(ativa.expira) + '</strong>' : ' <strong>sem prazo de validade</strong>') +
+        ' · código <strong>' + (ativa.codigo || '—') + '</strong>';
+      host.append(texto);
+    } else {
+      const texto = h('span', { class: 'plano-atual__texto' });
+      texto.innerHTML = 'Plano gratuito: <strong>1 projeto</strong>, <strong>5 modelos</strong>, PDF com marca d’água e sem criação com IA.';
+      host.append(texto);
+    }
+  }
+
+  function refreshPlanoUI() {
+    const api = Lic();
+    const lim = planoLimites();
+    const plano = api ? api.planoAtual() : 'essencial';
+    document.documentElement.dataset.plano = plano;
+
+    const nome = $('#plan-pill-nome');
+    if (nome) nome.textContent = lim.nome || 'Essencial';
+
+    const assinar = $('#btn-assinar-plano');
+    if (assinar && plano !== 'essencial') {
+      assinar.querySelector('span').textContent = 'Trocar de plano';
+    }
+
+    $$('#theme-swatches .swatch').forEach((el) => {
+      el.classList.toggle('is-locked', !pode('temas') && PREMIUM.temas.indexOf(el.dataset.theme) >= 0);
+    });
+
+    $$('#art-options .art-option').forEach((el) => {
+      el.classList.toggle('is-locked', !pode('capas') && PREMIUM.capas.indexOf(el.dataset.art) >= 0);
+    });
+
+    $$('#template-list .modal-card').forEach((el) => {
+      const travado = !pode('modelos') && PREMIUM.modelos.indexOf(el.dataset.template) >= 0;
+      el.classList.toggle('is-locked', travado);
+      const marca = el.querySelector('.modal-card__lock');
+      if (travado && !marca) el.append(h('span', { class: 'modal-card__lock', text: 'Profissional' }));
+      else if (!travado && marca) marca.remove();
+    });
+
+    const painelIa = $('.panel[data-panel="ai"]');
+    if (painelIa) painelIa.classList.toggle('is-ai-locked', !pode('ia'));
+    const cadeado = $('#ai-lock');
+    if (cadeado) cadeado.hidden = pode('ia');
+
+    const exportarHtml = $('[data-export="html"]');
+    if (exportarHtml) exportarHtml.classList.toggle('is-locked', !pode('html'));
+
+    renderPlanoAtual();
+  }
+
+  function bindPlano() {
+    const form = $('#form-licenca');
+    const campo = $('#licenca-codigo');
+    const msg = $('#licenca-msg');
+
+    if (campo) {
+      campo.addEventListener('input', () => {
+        const api = Lic();
+        if (!api) return;
+        const pos = campo.selectionStart;
+        const formatado = api.formatarCodigo(campo.value).slice(0, 30);
+        if (formatado !== campo.value) {
+          campo.value = formatado;
+          campo.setSelectionRange(Math.min(pos, formatado.length), Math.min(pos, formatado.length));
+        }
+      });
+    }
+
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const api = Lic();
+        if (!api) return;
+        const resultado = api.ativar(campo.value);
+        if (!resultado.ok) {
+          msg.className = 'plano-msg is-erro';
+          msg.textContent = resultado.erro;
+          campo.focus();
+          return;
+        }
+        msg.className = 'plano-msg is-ok';
+        msg.textContent = 'Plano ' + resultado.nome + ' liberado' + (resultado.expira ? ' até ' + dataBR(resultado.expira) : '') + '. Bom trabalho!';
+        campo.value = '';
+        refreshPlanoUI();
+        renderPages();
+        toast('Plano ' + resultado.nome + ' ativado');
+      });
+    }
+
+    $$('[data-upsell]').forEach((btn) => {
+      btn.addEventListener('click', () => upsell(btn.dataset.upsell));
+    });
+
+    const pill = $('#btn-plano');
+    if (pill) {
+      pill.addEventListener('click', () => {
+        const alvo = $('#plano-motivo');
+        if (alvo && !alvo.dataset.fixo) alvo.textContent = MOTIVOS.padrao;
+        renderPlanoAtual();
+      });
+    }
+
+    document.addEventListener('ebs:licenca', () => {
+      refreshPlanoUI();
+      if (state.project) renderPages();
+    });
+  }
+
   /* --------------------------------------------------------------- eventos */
   function bindEvents() {
     /* nome do projeto */
@@ -1108,6 +1303,7 @@
     $('#theme-swatches').addEventListener('click', (e) => {
       const btn = e.target.closest('[data-theme]');
       if (!btn) return;
+      if (!pode('temas') && PREMIUM.temas.indexOf(btn.dataset.theme) >= 0) { upsell('temas'); return; }
       state.project.theme = btn.dataset.theme;
       persist();
       renderPages();
@@ -1159,6 +1355,7 @@
     $('#art-options').addEventListener('click', (e) => {
       const btn = e.target.closest('[data-art]');
       if (!btn) return;
+      if (!pode('capas') && PREMIUM.capas.indexOf(btn.dataset.art) >= 0) { upsell('capas'); return; }
       state.project.art = btn.dataset.art;
       persist();
       renderPages();
@@ -1324,6 +1521,7 @@
     $$('[data-export]').forEach((btn) => btn.addEventListener('click', () => exportFile(btn.dataset.export)));
     $('#new-project').addEventListener('click', () => {
       closeModals();
+      if (!podeCriarProjetoAgora()) { upsell('projetos'); return; }
       if (!window.confirm('Criar um novo projeto em branco? O projeto atual continua salvo em "Meus projetos".')) return;
       setProject(blankProject());
       toast('Novo projeto criado');
@@ -1405,6 +1603,8 @@
     state.booted = true;
     buildInspectorOptions();
     bindEvents();
+    bindPlano();
+    refreshPlanoUI();
 
     const params = new URLSearchParams(window.location.search);
     const tplParam = params.get('template');

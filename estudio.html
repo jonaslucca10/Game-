@@ -28,6 +28,10 @@
     <span class="studio-bar__status" id="save-status"><i></i><span>Salvo</span></span>
   </div>
   <div class="studio-bar__actions">
+    <button class="plan-pill" type="button" id="btn-plano" data-open="modal-plano" title="Seu plano e licença" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l4.5 3L12 5l4.5 6L21 8l-2 10H5z"/></svg>
+      <span id="plan-pill-nome">Essencial</span>
+    </button>
     <button class="icon-btn" type="button" data-open="modal-projects" title="Meus projetos" aria-label="Meus projetos">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2.5h7A1.5 1.5 0 0 1 19 10v7.5A1.5 1.5 0 0 1 17.5 19h-13A1.5 1.5 0 0 1 3 17.5z"/></svg>
     </button>
@@ -217,6 +221,16 @@
 
       <!-- --------------------------- IA --------------------------- -->
       <section class="panel" data-panel="ai" role="tabpanel" aria-labelledby="tab-ai">
+        <div class="ai-lock" id="ai-lock" hidden>
+          <span class="ai-lock__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg>
+          </span>
+          <strong>A criação com IA faz parte do plano Profissional</strong>
+          <p class="panel__hint">Gere sumário e capítulos completos a partir do seu briefing, com o assistente local ou conectando sua própria chave da OpenAI.</p>
+          <button class="btn btn--primary btn--block" type="button" data-upsell="ia">Ver o Profissional · R$ 39/mês</button>
+          <button class="btn btn--ghost btn--block" type="button" data-upsell="codigo">Já tenho um código de acesso</button>
+        </div>
+        <div class="ai-body" id="ai-body">
         <div class="panel__group">
           <p class="panel__label">Modo de criação</p>
           <div class="segmented" id="mode-seg">
@@ -286,6 +300,7 @@
             <p class="panel__hint">Opcional. A chave fica salva apenas neste navegador e é enviada direto para a OpenAI, sem passar por servidores da E-books Studio. Sem chave, o estúdio usa o assistente local, que monta a estrutura e o texto a partir do seu briefing.</p>
           </div>
         </details>
+        </div>
       </section>
     </div>
   </aside>
@@ -359,11 +374,68 @@
   </div>
 </dialog>
 
+<dialog class="simple-modal" id="modal-plano">
+  <div class="simple-modal__inner">
+    <button class="simple-modal__close" type="button" data-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <h2>Seu plano</h2>
+    <p class="simple-modal__sub" id="plano-motivo">Compare o que está liberado no seu acesso atual.</p>
+
+    <div class="plano-atual" id="plano-atual"></div>
+
+    <div class="plano-beneficios">
+      <div class="plano-col">
+        <h3>Essencial <span>grátis</span></h3>
+        <ul>
+          <li class="ok">1 projeto ativo</li>
+          <li class="ok">5 modelos prontos</li>
+          <li class="ok">Exportação em PDF</li>
+          <li class="ok">Editor manual completo</li>
+          <li class="no">Criação com IA</li>
+          <li class="no">HTML e PDF sem marca d’água</li>
+          <li class="no">Temas e capas premium</li>
+        </ul>
+      </div>
+      <div class="plano-col plano-col--destacado">
+        <h3>Profissional <span>R$ 39/mês</span></h3>
+        <ul>
+          <li class="ok">Projetos ilimitados</li>
+          <li class="ok">Todos os modelos</li>
+          <li class="ok">IA para sumário e capítulos</li>
+          <li class="ok">PDF sem marca d’água + HTML</li>
+          <li class="ok">Temas, fontes e capas premium</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="plano-cta">
+      <a class="btn btn--primary btn--block" href="checkout.html?plano=profissional&amp;ciclo=mensal" id="btn-assinar-plano">
+        <span>Assinar Profissional</span>
+      </a>
+      <a class="btn btn--ghost btn--block" href="checkout.html?plano=studio&amp;ciclo=mensal">Ver plano Studio</a>
+    </div>
+
+    <div class="plano-codigo">
+      <label for="licenca-codigo">Já tem um código de acesso?</label>
+      <form class="code-field" id="form-licenca" novalidate>
+        <input id="licenca-codigo" type="text" placeholder="EBS-PRO-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="30">
+        <button class="btn btn--primary" type="submit">Ativar</button>
+      </form>
+      <p class="plano-msg" id="licenca-msg" role="status" aria-live="polite"></p>
+    </div>
+
+    <p class="panel__hint" style="margin-top:14px">Comprou em outro navegador? O código pode ser ativado em quantos computadores você quiser. <a href="acesso.html">Abrir página de ativação</a>.</p>
+  </div>
+</dialog>
+
 <div class="toast no-print" id="toast" role="status" aria-live="polite">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>
   <span id="toast-text">Salvo</span>
 </div>
 
+<script src="assets/js/licenca.js"></script>
+<script src="assets/js/licencas.js"></script>
 <script src="assets/js/ai.js"></script>
 <script src="assets/js/estudio.js"></script>
 </body>

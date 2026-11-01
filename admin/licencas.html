@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel de licenças — E-books Studio</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#07070b">
+<link rel="icon" href="../assets/img/logo-icon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/paginas.css">
+</head>
+<body class="page">
+
+<header class="page-head">
+  <a class="brand page-head__brand" href="../index.html" title="Voltar ao site">
+    <img src="../assets/img/logo.png" alt="E-books Studio">
+  </a>
+  <nav class="page-head__links" aria-label="Atalhos">
+    <a href="../acesso.html">Página de ativação</a>
+    <a href="../checkout.html?plano=profissional">Checkout</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div class="admin-banner">
+    <strong>Página interna.</strong> Ela não aparece no site, está fora do menu e bloqueada para buscadores.
+    Nada aqui é enviado para servidor: os códigos são gerados no seu navegador.
+  </div>
+
+  <span class="eyebrow">Painel interno</span>
+  <h1 class="page-title">Gerar códigos de acesso</h1>
+  <p class="page-sub">Gere os códigos depois de cada venda, envie ao cliente e cole o bloco gerado em <code>assets/js/licencas.js</code>. Só o hash entra no site — o código completa continua só com você e o cliente.</p>
+
+  <div class="card">
+    <h2 class="card__title">1. Configurar o lote</h2>
+    <p class="card__hint">Cada código libera o plano escolhido até a data de validade.</p>
+
+    <div class="admin-grid" style="margin-top:16px">
+      <div>
+        <label class="field-label" for="plano">Plano</label>
+        <select class="field-select" id="plano">
+          <option value="profissional">Profissional</option>
+          <option value="studio">Studio</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="quantidade">Quantidade</label>
+        <input class="field-input" id="quantidade" type="number" min="1" max="200" value="1">
+      </div>
+      <div>
+        <label class="field-label" for="validade">Validade</label>
+        <select class="field-select" id="validade">
+          <option value="1">1 mês</option>
+          <option value="3">3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="12" selected>12 meses</option>
+          <option value="24">24 meses</option>
+          <option value="0">Sem validade</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="cliente">Cliente (opcional)</label>
+        <input class="field-input" id="cliente" type="text" placeholder="nome ou e-mail">
+      </div>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn btn--primary" type="button" id="btn-gerar">Gerar códigos</button>
+      <button class="btn btn--ghost" type="button" id="btn-limpar">Limpar lista</button>
+    </div>
+  </div>
+
+  <div class="card" id="card-resultado" hidden>
+    <h2 class="card__title">2. Códigos deste lote</h2>
+    <p class="card__hint">Envie um código por cliente (e-mail, WhatsApp ou junto ao produto). Cada código serve em qualquer navegador, uma vez por licença.</p>
+    <div class="codes" id="lista-codigos"></div>
+
+    <div class="row-actions">
+      <button class="btn btn--ghost" type="button" id="btn-copiar-codigos">Copiar todos os códigos</button>
+      <button class="btn btn--ghost" type="button" id="btn-baixar-csv">Baixar CSV</button>
+    </div>
+
+    <h2 class="card__title" style="margin-top:26px">3. Cole este bloco em <code>assets/js/licencas.js</code></h2>
+    <p class="card__hint">Adicione as linhas dentro do array <code>window.EBOOKS_LICENCAS</code> e publique. Sem esse passo o código não é reconhecido.</p>
+    <textarea class="snippet" id="snippet" readonly spellcheck="false"></textarea>
+    <div class="row-actions">
+      <button class="btn btn--primary" type="button" id="btn-copiar-snippet">Copiar bloco</button>
+      <button class="btn btn--ghost" type="button" id="btn-copiar-registros">Copiar só os registros</button>
+    </div>
+  </div>
+
+  <div class="notice notice--warn" style="margin-top:22px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+    <div>
+      <strong>Limites do modelo sem servidor:</strong> um código não pode ser forjado (o site só conhece o hash), mas pode ser compartilhado por quem o recebeu.
+      Para bloquear por dispositivo ou por assinatura recorrente, é preciso um backend — o próximo passo natural é validar o código em uma função do Vercel com banco de dados.
+    </div>
+  </div>
+</main>
+
+<footer class="page-foot">
+  <span>© <span id="year">2026</span> E-books Studio — painel interno</span>
+  <span><a href="../index.html">Voltar ao site</a></span>
+</footer>
+
+<script src="../assets/js/licenca.js"></script>
+<script src="../assets/js/licencas.js"></script>
+<script src="../assets/js/admin-licencas.js"></script>
+</body>
+</html>

@@ -1055,3 +1055,18 @@
   .footer__news { grid-column: auto; }
   .footer__bottom { flex-direction: column; align-items: flex-start; }
 }
+
+/* rodapé do bloco de planos */
+.plans__foot {
+  margin: 26px 0 0;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-dark-soft);
+}
+.plans__foot a {
+  color: var(--purple-700);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.plans__foot a:hover { color: var(--purple-600); }

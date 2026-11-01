@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
+# Áreas internas
+Disallow: /admin/
+Disallow: /checkout.html
+Disallow: /acesso.html
+
 # E-books Studio — site institucional e estúdio de criação

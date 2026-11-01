@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finalizar assinatura — E-books Studio</title>
+<meta name="description" content="Assine o plano Profissional ou Studio da E-books Studio: projetos ilimitados, criação com IA e exportação sem marca d’água.">
+<meta name="theme-color" content="#07070b">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="assets/img/logo-icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/paginas.css">
+</head>
+<body class="page">
+
+<header class="page-head">
+  <a class="brand page-head__brand" href="index.html" title="Voltar ao site">
+    <img src="assets/img/logo.png" alt="E-books Studio">
+  </a>
+  <nav class="page-head__links" aria-label="Atalhos">
+    <a href="index.html#planos">Planos</a>
+    <a href="index.html#faq">Dúvidas</a>
+    <a class="is-strong" href="acesso.html">Já tenho código</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <span class="eyebrow">Checkout</span>
+  <h1 class="page-title">Escolha seu plano e comece hoje</h1>
+  <p class="page-sub">Pagamento processado em ambiente seguro. Depois de confirmado, você recebe um <strong>código de acesso</strong> por e-mail para liberar o plano no estúdio.</p>
+
+  <div class="pay-grid">
+    <!-- ------------------------------------------------------- escolha -->
+    <div>
+      <section class="card" aria-labelledby="plano-titulo">
+        <h2 class="card__title" id="plano-titulo">1. Seu plano</h2>
+        <p class="card__hint">Você pode mudar ou cancelar quando quiser.</p>
+
+        <div class="plan-pick" role="radiogroup" aria-label="Planos disponíveis">
+          <button type="button" class="plan-opt is-active" role="radio" aria-checked="true" data-plano="profissional">
+            <span class="plan-opt__tag">Mais escolhido</span>
+            <span class="plan-opt__radio" aria-hidden="true"></span>
+            <span>
+              <span class="plan-opt__name">Profissional</span>
+              <span class="plan-opt__desc">Projetos ilimitados, IA inclusa e PDF sem marca d’água.</span>
+            </span>
+            <span class="plan-opt__price" data-preco="profissional">R$ 39<small>por mês</small></span>
+          </button>
+
+          <button type="button" class="plan-opt" role="radio" aria-checked="false" data-plano="studio">
+            <span class="plan-opt__radio" aria-hidden="true"></span>
+            <span>
+              <span class="plan-opt__name">Studio</span>
+              <span class="plan-opt__desc">Tudo do Profissional para até 5 pessoas da sua equipe.</span>
+            </span>
+            <span class="plan-opt__price" data-preco="studio">R$ 79<small>por mês</small></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="ciclo-titulo">
+        <h2 class="card__title" id="ciclo-titulo">2. Período</h2>
+        <p class="card__hint">No plano anual o valor mensal cai 20%.</p>
+        <div class="cycle" role="group" aria-label="Periodicidade">
+          <button type="button" class="is-active" data-ciclo="mensal">Mensal</button>
+          <button type="button" data-ciclo="anual">Anual</button>
+        </div>
+        <span class="cycle__save" id="ciclo-save" hidden>Economize 20%</span>
+      </section>
+
+      <section class="card" aria-labelledby="pagar-titulo">
+        <h2 class="card__title" id="pagar-titulo">3. Pagamento</h2>
+        <p class="card__hint" id="pagamento-hint">Ambiente seguro do provedor de pagamentos.</p>
+
+        <div id="aviso-pagamento" class="notice notice--warn" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          <div>
+            <strong>Checkout ainda não configurado.</strong>
+            Nenhuma cobrança é feita e nenhum plano é liberado enquanto o link de pagamento não for cadastrado em <code>assets/js/pagamento.js</code>.
+            <span id="aviso-contato"></span>
+          </div>
+        </div>
+
+        <div class="pay-methods" aria-label="Formas de pagamento aceitas">
+          <span>Pix</span><span>Cartão</span><span>Boleto</span>
+        </div>
+
+        <div style="display:grid;gap:12px;margin-top:20px">
+          <a class="btn btn--primary btn--lg btn--block" id="btn-pagar" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19"/></svg>
+            <span id="btn-pagar-texto">Ir para o pagamento</span>
+          </a>
+          <a class="btn btn--ghost btn--block" href="acesso.html">Já paguei — inserir código de acesso</a>
+        </div>
+
+        <div class="notice notice--info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8v.01M11 12h1v5h1"/><circle cx="12" cy="12" r="9"/></svg>
+          <div>
+            O estúdio funciona 100% no seu navegador. O código de acesso é a sua licença: guarde o e-mail da compra, ele vale também em outro computador.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- --------------------------------------------------------- resumo -->
+    <aside class="summary" aria-labelledby="resumo-titulo">
+      <div class="card">
+        <h2 class="card__title" id="resumo-titulo">Resumo</h2>
+        <div class="summary__row"><span>Plano</span><strong id="resumo-plano">Profissional</strong></div>
+        <div class="summary__row"><span>Período</span><strong id="resumo-ciclo">Mensal</strong></div>
+        <div class="summary__row"><span>Preço</span><strong id="resumo-preco">R$ 39 / mês</strong></div>
+        <div class="summary__row summary__row--total"><span>Cobrança de hoje</span><strong id="resumo-total">R$ 39</strong></div>
+
+        <ul class="summary__list" id="resumo-recursos">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Projetos ilimitados</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Criação com IA (sumário e capítulos)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Todos os modelos, temas e capas</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>PDF sem marca d’água + exportação HTML</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="card__title">Como recebo meu acesso?</h2>
+        <div class="steps">
+          <div class="step">
+            <span class="step__num">1</span>
+            <div><strong>Pague</strong><span>Pix, cartão ou boleto no checkout do provedor.</span></div>
+          </div>
+          <div class="step">
+            <span class="step__num">2</span>
+            <div><strong>Receba o código</strong><span>Enviamos o código de acesso para o seu e-mail após a confirmação.</span></div>
+          </div>
+          <div class="step">
+            <span class="step__num">3</span>
+            <div><strong>Ative</strong><span>Cole o código em <a href="acesso.html" style="text-decoration:underline">acesso.html</a> e o estúdio libera o plano na hora.</span></div>
+          </div>
+        </div>
+        <p class="muted" style="margin:16px 0 0">Garantia de <span id="garantia">7</span> dias. Sem fidelidade — cancele quando quiser.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="page-foot">
+  <span>© <span id="year">2026</span> E-books Studio</span>
+  <span>
+    <a href="index.html">Início</a> ·
+    <a href="estudio.html">Estúdio</a> ·
+    <a href="acesso.html">Ativar código</a> ·
+    <a href="mailto:contato@ebooksstudio.com.br" data-suporte-email>contato@ebooksstudio.com.br</a>
+  </span>
+</footer>
+
+<script src="assets/js/pagamento.js"></script>
+<script src="assets/js/licenca.js"></script>
+<script src="assets/js/licencas.js"></script>
+<script src="assets/js/checkout.js"></script>
+</body>
+</html>
