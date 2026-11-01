@@ -4,6 +4,12 @@ Site institucional + estúdio de criação de e-books da **E-books Studio**.
 O usuário pode criar um e-book **manualmente**, **com IA** ou no **modo híbrido**, ajustar o
 design (tema, cor de destaque, tipografia, layout e formato) e exportar em PDF, HTML ou JSON.
 
+## No ar
+
+**https://ebooks-studio.vercel.app** — deploy automático a cada `git push` no repositório
+[`jonaslucca10/Game-`](https://github.com/jonaslucca10/Game-), projeto Vercel `ebooks-studio`.
+Páginas: `/` (landing), `/estudio.html` (estúdio) e 404 personalizada.
+
 ## Como rodar
 
 O projeto é 100% estático — não precisa de build. Basta servir a pasta:
