@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minha conta — E-books Studio</title>
+<meta name="description" content="Seus dados, saldo de créditos e extrato de uso na E-books Studio.">
+<meta name="theme-color" content="#07070b">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="assets/img/logo-icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/paginas.css">
+</head>
+<body class="page">
+
+<header class="page-head">
+  <a class="brand page-head__brand" href="index.html" title="Voltar ao site">
+    <img src="assets/img/logo.png" alt="E-books Studio">
+  </a>
+  <nav class="page-head__links" aria-label="Atalhos">
+    <a href="estudio.html">Estúdio</a>
+    <a href="index.html#planos">Planos</a>
+    <a href="#" id="btn-sair-head">Sair</a>
+  </nav>
+</header>
+
+<main class="wrap wrap--narrow" id="conteudo" hidden>
+  <span class="eyebrow">Minha conta</span>
+  <h1 class="page-title" id="saudacao">Olá 👋</h1>
+  <p class="page-sub">Seu acesso ao estúdio, saldo de créditos e histórico de uso.</p>
+
+  <section class="card conta-card">
+    <div class="conta-topo">
+      <span class="conta-avatar" id="conta-avatar" aria-hidden="true">?</span>
+      <div>
+        <strong id="conta-usuario">@usuario</strong>
+        <span id="conta-email">email@exemplo.com</span>
+      </div>
+      <span class="plano-atual__badge" id="conta-plano">Essencial</span>
+    </div>
+
+    <div class="conta-creditos">
+      <div>
+        <span class="conta-creditos__num" data-creditos-valor>—</span>
+        <span class="conta-creditos__rotulo">créditos restantes</span>
+      </div>
+      <div class="conta-creditos__barra" aria-hidden="true"><span id="barra-creditos"></span></div>
+      <p class="muted" id="conta-creditos-hint">Cada conta nova começa com 100 créditos.</p>
+    </div>
+
+    <div class="row-actions">
+      <a class="btn btn--primary" href="estudio.html">Abrir o estúdio</a>
+      <a class="btn btn--ghost" href="checkout.html?plano=profissional&amp;ciclo=mensal">Ver planos</a>
+      <button class="btn btn--ghost" type="button" id="btn-sair">Sair da conta</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="card__title">Extrato de créditos</h2>
+    <p class="card__hint">Os últimos lançamentos, do mais recente para o mais antigo.</p>
+    <div class="extrato" id="extrato"><p class="muted">Carregando…</p></div>
+  </section>
+
+  <section class="card">
+    <h2 class="card__title">Licença de plano</h2>
+    <p class="card__hint">O plano pago é liberado por código de acesso, separado da conta.</p>
+    <div class="row-actions">
+      <a class="btn btn--ghost" href="acesso.html">Ativar ou remover código</a>
+    </div>
+  </section>
+</main>
+
+<div class="auth-gate" id="gate">
+  <div class="auth-gate__box">
+    <span class="auth-gate__spinner" aria-hidden="true"></span>
+    <p id="gate-texto">Verificando sua conta…</p>
+  </div>
+</div>
+
+<footer class="page-foot">
+  <span>© <span id="year">2026</span> E-books Studio</span>
+  <span><a href="index.html">Início</a> · <a href="estudio.html">Estúdio</a></span>
+</footer>
+
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/licenca.js"></script>
+<script src="assets/js/licencas.js"></script>
+<script src="assets/js/creditos.js"></script>
+<script src="assets/js/conta.js"></script>
+</body>
+</html>

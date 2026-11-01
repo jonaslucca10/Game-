@@ -133,7 +133,7 @@ e o código em si nunca aparece no repositório.
 | Projetos salvos | 1 | ilimitados | ilimitados |
 | Modelos prontos | 5 (o modelo `metodo` é premium) | todos | todos |
 | Temas e capas | básicos | todos | todos |
-| Criação com IA | — | sim | sim |
+| Criação com IA | sim, paga com créditos | sim, paga com créditos | sim, paga com créditos |
 | Exportação | PDF com marca d’água | PDF sem marca d’água + HTML | idem |
 | Equipe | — | — | sim (selo no painel) |
 
@@ -151,3 +151,32 @@ acesso).
   `assets/img/logo-icon.png` (símbolo).
 - Conteúdo da landing: textos em `index.html`.
 - Modelos de e-book: array `TEMPLATES` em `assets/js/estudio.js`.
+
+## Contas e créditos (Supabase)
+
+O estúdio **só abre com uma conta logada**. O login fica em `login.html` e aceita criar conta
+com **nome de usuário + e-mail + senha**, entrar com e-mail e senha e (quando configurado)
+entrar com o Google. A sessão é validada no servidor a cada visita por `assets/js/estudio-gate.js`,
+então apagar o `localStorage` não libera o editor.
+
+- Toda conta nova nasce com **100 créditos** (trigger `on_auth_user_created` no banco).
+- As ações de IA descontam créditos de verdade no Supabase, pela função `gastar_creditos`
+  (atômica, não dá para burlar pelo console): e-book completo = 10, sumário = 2, página = 2.
+- A tabela de preços fica em `assets/js/creditos.js` (`CUSTOS`) e o saldo aparece no chip do
+  estúdio e em `conta.html` (extrato incluído).
+- Chaves: `assets/js/backend.js` guarda apenas a URL do projeto e a **anon key** (pública).
+  A `service_role` nunca deve ir para o frontend.
+
+### Login com Google (pendente)
+
+Falta criar um cliente OAuth no Google Cloud e colar o *client id*/*secret* em
+**Supabase → Authentication → Providers → Google**, adicionando
+`https://rzgiqnvwaovqtiggxdxe.supabase.co/auth/v1/callback` como redirect URI.
+Enquanto isso o botão do Google aparece desabilitado com aviso.
+
+### Configuração aplicada no Supabase
+
+- Site URL: `https://ebooks-studio.vercel.app`; redirects liberados para o domínio de produção e
+  `http://localhost:3000/**`.
+- Confirmação de e-mail **desligada** (o SMTP padrão do Supabase não entrega); senha mínima de 6
+  caracteres. Ao configurar um SMTP próprio, reative a confirmação.

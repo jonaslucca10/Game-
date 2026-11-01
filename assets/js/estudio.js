@@ -782,7 +782,6 @@
 
   async function generate(kind) {
     if (state.busy) return;
-    if (!pode('ia')) { upsell('ia'); return; }
     const opts = aiOptions();
     if (!opts.topic) {
       aiLog('Descreva o tema do e-book para começar.');
@@ -791,6 +790,9 @@
       return;
     }
     if (!opts.audience) opts.audience = 'leitores que querem aplicar o tema na prática';
+
+    const cobranca = await cobrarCreditos(kind);
+    if (!cobranca.ok) return;
 
     setAiBusy(true);
     const bar = $('#ai-progress-bar');
@@ -1130,6 +1132,60 @@
     return projetosExtras().length === 0;
   }
 
+  /* ------------------------------------------------------------- créditos */
+  function saldoCreditos() {
+    return window.EbooksCreditos ? window.EbooksCreditos.saldoAtual() : null;
+  }
+
+  function semCreditos() {
+    const saldo = saldoCreditos();
+    return saldo !== null && saldo <= 0;
+  }
+
+  function atualizarCadeadoIA() {
+    const painel = $('.panel[data-panel="ai"]');
+    const bloqueado = semCreditos();
+    if (painel) painel.classList.toggle('is-ai-locked', bloqueado);
+    const cadeado = $('#ai-lock');
+    if (cadeado) cadeado.hidden = !bloqueado;
+  }
+
+  function upsellCreditos() {
+    const alvo = $('#plano-motivo');
+    if (alvo) alvo.textContent = 'Seus créditos de IA acabaram. Dá para continuar escrevendo manualmente ou ver os planos e falar com o time para recarregar.';
+    openModal('modal-plano');
+  }
+
+  // Desconta no servidor antes de gerar: sem saldo, a geração não acontece.
+  async function cobrarCreditos(kind) {
+    if (!window.EbooksCreditos) return { ok: true };
+    const custo = window.EbooksCreditos.custoDe(kind);
+    if (!custo) return { ok: true };
+
+    const resultado = await window.EbooksCreditos.cobrar(kind);
+
+    if (resultado.ok) {
+      toast(custo + ' créditos usados');
+      return resultado;
+    }
+    if (resultado.erro === 'creditos') {
+      atualizarCadeadoIA();
+      aiLog('Créditos insuficientes. O modo manual continua liberado — assine um plano ou fale com o time para recarregar.');
+      toast('Créditos insuficientes');
+      upsellCreditos();
+      return resultado;
+    }
+    if (resultado.erro === 'sessao') {
+      toast('Sessão expirada');
+      setTimeout(() => {
+        window.location.replace('login.html?next=' + encodeURIComponent('estudio.html'));
+      }, 1200);
+      return resultado;
+    }
+    toast('Não foi possível descontar os créditos');
+    return resultado;
+  }
+
   function upsell(motivo) {
     const alvo = $('#plano-motivo');
     if (alvo) alvo.textContent = MOTIVOS[motivo] || MOTIVOS.padrao;
@@ -1191,10 +1247,7 @@
       else if (!travado && marca) marca.remove();
     });
 
-    const painelIa = $('.panel[data-panel="ai"]');
-    if (painelIa) painelIa.classList.toggle('is-ai-locked', !pode('ia'));
-    const cadeado = $('#ai-lock');
-    if (cadeado) cadeado.hidden = pode('ia');
+    atualizarCadeadoIA();
 
     const exportarHtml = $('[data-export="html"]');
     if (exportarHtml) exportarHtml.classList.toggle('is-locked', !pode('html'));
@@ -1600,11 +1653,20 @@
   /* ----------------------------------------------------------------- boot */
   function init() {
     if (state.booted) return;
+
+    // O estúdio só abre com conta logada: espera o veredito do estudio-gate.js
+    if (window.EBOOKS_AUTORIZADO !== true) {
+      document.addEventListener('ebs:autorizado', () => init(), { once: true });
+      return;
+    }
+
     state.booted = true;
     buildInspectorOptions();
     bindEvents();
     bindPlano();
     refreshPlanoUI();
+    if (window.EbooksCreditos) window.EbooksCreditos.decorarBotoes();
+    document.addEventListener('ebs:creditos', () => atualizarCadeadoIA());
 
     const params = new URLSearchParams(window.location.search);
     const tplParam = params.get('template');

@@ -16,6 +16,15 @@
 </head>
 <body class="studio-body">
 
+<!-- porta de entrada: só sai daqui com sessão válida (ver estudio-gate.js) -->
+<div class="auth-gate" id="auth-gate">
+  <div class="auth-gate__box">
+    <span class="auth-gate__spinner" aria-hidden="true"></span>
+    <p>Verificando sua conta…</p>
+    <p class="auth-gate__hint">O estúdio é liberado apenas para contas logadas.</p>
+  </div>
+</div>
+
 <!-- ============================ TOPBAR ============================ -->
 <header class="studio-bar no-print">
   <a class="brand studio-bar__brand" href="index.html" title="Voltar ao site">
@@ -28,6 +37,11 @@
     <span class="studio-bar__status" id="save-status"><i></i><span>Salvo</span></span>
   </div>
   <div class="studio-bar__actions">
+    <a class="credits-chip" id="creditos-chip" data-creditos-chip href="conta.html" title="Seus créditos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.2a1.8 1.8 0 0 1 0 3.6H11.5a1.8 1.8 0 0 0 0 3.6h3.2"/></svg>
+      <strong data-creditos-valor>—</strong>
+      <span>créditos</span>
+    </a>
     <button class="plan-pill" type="button" id="btn-plano" data-open="modal-plano" title="Seu plano e licença" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l4.5 3L12 5l4.5 6L21 8l-2 10H5z"/></svg>
       <span id="plan-pill-nome">Essencial</span>
@@ -223,12 +237,12 @@
       <section class="panel" data-panel="ai" role="tabpanel" aria-labelledby="tab-ai">
         <div class="ai-lock" id="ai-lock" hidden>
           <span class="ai-lock__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.2a1.8 1.8 0 0 1 0 3.6H11.5a1.8 1.8 0 0 0 0 3.6h3.2"/></svg>
           </span>
-          <strong>A criação com IA faz parte do plano Profissional</strong>
-          <p class="panel__hint">Gere sumário e capítulos completos a partir do seu briefing, com o assistente local ou conectando sua própria chave da OpenAI.</p>
-          <button class="btn btn--primary btn--block" type="button" data-upsell="ia">Ver o Profissional · R$ 39/mês</button>
-          <button class="btn btn--ghost btn--block" type="button" data-upsell="codigo">Já tenho um código de acesso</button>
+          <strong>Seus créditos acabaram</strong>
+          <p class="panel__hint">Cada geração com IA consome créditos do seu saldo. Enquanto estiver sem saldo, o editor manual continua funcionando normalmente.</p>
+          <a class="btn btn--primary btn--block" href="conta.html">Ver meu saldo e extrato</a>
+          <a class="btn btn--ghost btn--block" href="checkout.html?plano=profissional&amp;ciclo=mensal">Ver planos</a>
         </div>
         <div class="ai-body" id="ai-body">
         <div class="panel__group">
@@ -434,9 +448,13 @@
   <span id="toast-text">Salvo</span>
 </div>
 
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/creditos.js"></script>
 <script src="assets/js/licenca.js"></script>
 <script src="assets/js/licencas.js"></script>
 <script src="assets/js/ai.js"></script>
+<script src="assets/js/estudio-gate.js"></script>
 <script src="assets/js/estudio.js"></script>
 </body>
 </html>

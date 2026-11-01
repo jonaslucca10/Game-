@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar — E-books Studio</title>
+<meta name="description" content="Entre ou crie sua conta na E-books Studio para criar e-books profissionais com IA. Toda conta nova começa com 100 créditos.">
+<meta name="theme-color" content="#07070b">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="assets/img/logo-icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/paginas.css">
+</head>
+<body class="page">
+
+<header class="page-head">
+  <a class="brand page-head__brand" href="index.html" title="Voltar ao site">
+    <img src="assets/img/logo.png" alt="E-books Studio">
+  </a>
+  <nav class="page-head__links" aria-label="Atalhos">
+    <a href="index.html">Início</a>
+    <a href="index.html#planos">Planos</a>
+    <a class="is-strong" href="acesso.html">Tenho um código</a>
+  </nav>
+</header>
+
+<main class="wrap wrap--narrow">
+  <span class="eyebrow">Sua conta</span>
+  <h1 class="page-title">Entre para abrir o estúdio</h1>
+  <p class="page-sub">O editor da E-books Studio é liberado só para contas logadas. Cada conta nova começa com <strong>100 créditos</strong> para criar com IA.</p>
+
+  <section class="card auth-card">
+    <div class="auth-tabs" role="tablist" aria-label="Entrar ou criar conta">
+      <button type="button" role="tab" id="tab-entrar" aria-controls="painel-entrar" aria-selected="true" class="is-active" data-aba="entrar">Entrar</button>
+      <button type="button" role="tab" id="tab-criar" aria-controls="painel-criar" aria-selected="false" data-aba="criar">Criar conta</button>
+    </div>
+
+    <div class="auth-body">
+      <!-- ------------------------------------------------------- entrar -->
+      <form id="painel-entrar" role="tabpanel" aria-labelledby="tab-entrar" class="auth-form" novalidate>
+        <div class="field">
+          <label class="field-label" for="entrar-email">E-mail</label>
+          <input class="field-input" id="entrar-email" type="email" autocomplete="email" placeholder="voce@email.com" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="entrar-senha">Senha</label>
+          <input class="field-input" id="entrar-senha" type="password" autocomplete="current-password" placeholder="Sua senha" required>
+        </div>
+        <button class="btn btn--primary btn--lg btn--block" type="submit" id="btn-entrar">Entrar no estúdio</button>
+        <button class="btn-link" type="button" id="btn-esqueci">Esqueci minha senha</button>
+      </form>
+
+      <!-- --------------------------------------------------- criar conta -->
+      <form id="painel-criar" role="tabpanel" aria-labelledby="tab-criar" class="auth-form" hidden novalidate>
+        <div class="field">
+          <label class="field-label" for="criar-usuario">Nome de usuário</label>
+          <input class="field-input" id="criar-usuario" type="text" autocomplete="username" placeholder="ex.: mariana_silva" maxlength="20" spellcheck="false" required>
+          <p class="field-hint" id="usuario-status">3 a 20 caracteres: letras, números ou _.</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="criar-email">E-mail</label>
+          <input class="field-input" id="criar-email" type="email" autocomplete="email" placeholder="voce@email.com" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="criar-senha">Senha</label>
+          <input class="field-input" id="criar-senha" type="password" autocomplete="new-password" placeholder="Mínimo de 6 caracteres" minlength="6" required>
+        </div>
+        <button class="btn btn--primary btn--lg btn--block" type="submit" id="btn-criar">Criar conta com 100 créditos</button>
+        <p class="auth-fine">Ao criar a conta você concorda em usar o estúdio para conteúdo próprio ou autorizado.</p>
+      </form>
+
+      <div class="auth-divider"><span>ou</span></div>
+
+      <button class="btn btn--ghost btn--lg btn--block auth-google" type="button" id="btn-google">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.6-.2-2.3H12v4.4h6.4c-.1 1.1-.8 2.7-2.4 3.8l-.1.1 3.6 2.8c2.1-1.9 3.9-4.8 3.9-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.5-2.9l-3.6-2.8c-1 .7-2.3 1.2-3.9 1.2-3 0-5.6-2-6.5-4.8l-.1.1-3.7 2.9C3.3 21.3 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.5 14.7c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3v-.1L1.7 7C.9 8.5.5 10.2.5 12s.4 3.5 1.2 5l3.8-2.3z"/><path fill="#EA4335" d="M12 5.4c2.1 0 3.6.9 4.4 1.7l3.2-3.1C17.9 2.3 15.2 1.2 12 1.2 7.3 1.2 3.3 3.9 1.7 7.9l3.8 2.9C6.4 8 9 5.4 12 5.4z"/></svg>
+        <span>Continuar com Google</span>
+      </button>
+
+      <p class="auth-msg" id="auth-msg" role="status" aria-live="polite"></p>
+
+      <div class="auth-info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v5h1"/></svg>
+        <span>Seus e-books ficam salvos neste navegador. A conta serve para liberar o editor e controlar os créditos de IA.</span>
+      </div>
+    </div>
+  </section>
+
+  <p class="auth-foot">Ainda não assinou? <a href="checkout.html?plano=profissional&amp;ciclo=mensal">Ver planos</a> · Dúvidas: <a href="mailto:contato@ebooksstudio.com.br">contato@ebooksstudio.com.br</a></p>
+</main>
+
+<footer class="page-foot">
+  <span>© <span id="year">2026</span> E-books Studio</span>
+  <span><a href="index.html">Início</a> · <a href="acesso.html">Ativar código</a></span>
+</footer>
+
+<script src="assets/js/backend.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/login.js"></script>
+</body>
+</html>
